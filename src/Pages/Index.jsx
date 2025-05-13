@@ -20,7 +20,10 @@ const Index = () => {
             <Box component="main" flexGrow={1} py={4}>
               <Container>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} lg={6}>
+                  <Grid
+                    columns={{ xs: 12, lg: 12 }}
+                    sx={{ gridColumn: { xs: 'span 12', lg: 'span 6' } }}
+                  >
                     <LoanCalculator />
                   </Grid>
                   <Grid item xs={12} lg={6}>

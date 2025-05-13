@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Card,
   CardContent,
@@ -15,8 +15,11 @@ import {
 } from '@mui/material'
 import { useEmiCalculator } from '@/Hooks/useEmiCalculator'
 import { useCurrency } from '@/Context/CurrencyContext'
+import { useTheme } from '@mui/material/styles'
 
 const LoanCalculator = () => {
+  const theme = useTheme()
+
   const {
     loanDetails,
     setLoanDetails,
@@ -26,6 +29,7 @@ const LoanCalculator = () => {
     isValid,
     errorMessage,
   } = useEmiCalculator()
+
   const {
     baseCurrency,
     setBaseCurrency,
@@ -53,8 +57,19 @@ const LoanCalculator = () => {
   }
 
   return (
-    <Card sx={{ maxWidth: 600, margin: 'auto', boxShadow: 3 }}>
-      <CardHeader title="Loan EMI Calculator" sx={{ textAlign: 'center' }} />
+    <Card
+      sx={{
+        maxWidth: 600,
+        margin: 'auto',
+        boxShadow: 3,
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+      }}
+    >
+      <CardHeader
+        title="Loan EMI Calculator"
+        sx={{ textAlign: 'center', color: theme.palette.text.primary }}
+      />
       <CardContent>
         {/* Currency Selection */}
         <Box mb={3}>
@@ -63,6 +78,11 @@ const LoanCalculator = () => {
             <Select
               value={baseCurrency}
               onChange={(e) => setBaseCurrency(e.target.value)}
+              label="Currency"
+              sx={{
+                backgroundColor: theme.palette.background.default,
+                color: theme.palette.text.primary,
+              }}
             >
               {availableCurrencies.map((currency) => (
                 <MenuItem key={currency} value={currency}>
@@ -168,10 +188,15 @@ const LoanCalculator = () => {
           />
         </Box>
 
+        {/* Error Message */}
         {errorMessage && (
           <Box
             mb={3}
-            sx={{ backgroundColor: '#f8d7da', padding: 2, borderRadius: 1 }}
+            sx={{
+              backgroundColor: theme.palette.error.light,
+              padding: 2,
+              borderRadius: 1,
+            }}
           >
             <Typography color="error">{errorMessage}</Typography>
           </Box>
@@ -180,7 +205,12 @@ const LoanCalculator = () => {
         {/* Results Section */}
         <Box
           mt={4}
-          sx={{ backgroundColor: '#f9fafb', padding: 3, borderRadius: 2 }}
+          sx={{
+            backgroundColor: theme.palette.background.default,
+            color: theme.palette.text.primary,
+            padding: 3,
+            borderRadius: 2,
+          }}
         >
           <Typography variant="h6" gutterBottom>
             Loan Summary
@@ -196,45 +226,34 @@ const LoanCalculator = () => {
                 gap: 2,
               }}
             >
-              <Box
-                sx={{
-                  backgroundColor: '#fff',
-                  padding: 2,
-                  borderRadius: 1,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="body2">Monthly Payment (EMI)</Typography>
-                <Typography variant="h6">
-                  {isValid ? formatCurrency(emi) : 'N/A'}
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  backgroundColor: '#fff',
-                  padding: 2,
-                  borderRadius: 1,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="body2">Total Payment</Typography>
-                <Typography variant="h6">
-                  {isValid ? formatCurrency(totalPayment) : 'N/A'}
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  backgroundColor: '#fff',
-                  padding: 2,
-                  borderRadius: 1,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="body2">Total Interest</Typography>
-                <Typography variant="h6">
-                  {isValid ? formatCurrency(totalInterest) : 'N/A'}
-                </Typography>
-              </Box>
+              {[
+                {
+                  label: 'Monthly Payment (EMI)',
+                  value: isValid ? formatCurrency(emi) : 'N/A',
+                },
+                {
+                  label: 'Total Payment',
+                  value: isValid ? formatCurrency(totalPayment) : 'N/A',
+                },
+                {
+                  label: 'Total Interest',
+                  value: isValid ? formatCurrency(totalInterest) : 'N/A',
+                },
+              ].map((item, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    backgroundColor: theme.palette.background.paper,
+                    color: theme.palette.text.primary,
+                    padding: 2,
+                    borderRadius: 1,
+                    boxShadow: 1,
+                  }}
+                >
+                  <Typography variant="body2">{item.label}</Typography>
+                  <Typography variant="h6">{item.value}</Typography>
+                </Box>
+              ))}
             </Box>
           )}
         </Box>
