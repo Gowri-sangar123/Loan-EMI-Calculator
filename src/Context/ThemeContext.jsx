@@ -9,9 +9,9 @@ export const ThemeProvider = ({ children }) => {
     if (saved === 'light' || saved === 'dark') {
       return saved
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'
+
+    // ✅ Force dark as default
+    return 'dark'
   })
 
   const toggleMode = () => {
